@@ -2,10 +2,16 @@ var repository = require('./repository');
 var express = require('express');
 var router = express.Router();
 
-const getAllCustomers = (_, res) =>
+const getAllCustomers = () =>
   repository.getAllCustomers()
-    .then(x => res.json(x));
+    .then(x => x.map(({ firstName, lastName }) => ({
+      firstName,
+      lastName
+    })));
 
-router.get('/', getAllCustomers);
+router.get('/', (_, res) => getAllCustomers().then(x => res.json(x)));
 
-module.exports = router;
+module.exports = {
+  getAllCustomers,
+  router
+};
